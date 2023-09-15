@@ -7,6 +7,7 @@ import java.util.concurrent.TimeoutException
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.time.Duration
+import kotlin.time.toKotlinDuration
 
 private val logger = KotlinLogging.logger {}
 
@@ -92,21 +93,92 @@ class SyncValue<T>(initValue: T,
 
     override fun waitFor(duration: java.time.Duration,
                          message: String,
-                         predicate: (T) -> Boolean): T {
-        val deadline = Date(Clock.systemUTC()
-                                .millis() + duration.toMillis())
+                         predicate: (T) -> Boolean): T = waitFor(duration = duration.toKotlinDuration(),
+                                                                 message = message,
+                                                                 predicate = predicate)
+}
 
-        logger.info { message }
+fun waitFor(values: Array<SyncValueImmutable<out Any>>,
+            message: String = "Wait for: ${
+                values.joinToString(separator = ", ",
+                                    prefix = "[",
+                                    postfix = "]") { it.name }
+            }...",
+            predicate: (Array<out Any>) -> Boolean) {
+    val lock = ReentrantLock()
+    val condition = lock.newCondition()
 
+    val listener = ValueChangedListener<Any> { _, _ ->
         lock.withLock {
-            while (!predicate.invoke(value)) {
+            condition.signalAll()
+        }
+    }
+
+    values.forEach { value ->
+        value.addListener(fireCurrentState = false,
+                          listener = listener)
+    }
+
+    logger.info { message }
+
+    try {
+        lock.withLock {
+            while (!predicate.invoke(values.map { it.value }
+                                         .toTypedArray())) {
+                condition.await()
+            }
+        }
+    } finally {
+        values.forEach { value ->
+            value.removeListener(listener = listener)
+        }
+    }
+}
+
+fun waitFor(duration: Duration,
+            values: Array<SyncValueImmutable<out Any>>,
+            message: String = "Wait for: ${
+                values.joinToString(separator = ", ",
+                                    prefix = "[",
+                                    postfix = "]") { it.name }
+            }...",
+            predicate: (Array<out Any>) -> Boolean) {
+    val deadline = Date(Clock.systemUTC()
+                            .millis() + duration.inWholeMilliseconds)
+
+    val lock = ReentrantLock()
+    val condition = lock.newCondition()
+
+    val listener = ValueChangedListener<Any> { _, _ ->
+        lock.withLock {
+            condition.signalAll()
+        }
+    }
+
+    values.forEach { value ->
+        value.addListener(fireCurrentState = false,
+                          listener = listener)
+    }
+
+    logger.info { message }
+
+    try {
+        lock.withLock {
+            while (!predicate.invoke(values.map { it.value }
+                                         .toTypedArray())) {
                 val elapsed = condition.awaitUntil(deadline)
                 if (!elapsed) {
-                    throw TimeoutException("Wait for $name expired in $duration and condition not met!")
+                    throw TimeoutException("Wait for ${
+                        values.joinToString(separator = ", ",
+                                            prefix = "[",
+                                            postfix = "]") { it.name }
+                    } expired in $duration and condition not met!")
                 }
             }
-
-            return value
+        }
+    } finally {
+        values.forEach { value ->
+            value.removeListener(listener = listener)
         }
     }
 }
