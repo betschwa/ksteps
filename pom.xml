@@ -535,14 +535,13 @@
         <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
         <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
         <maven.buildNumber.timestampFormat>{0,date,yyyyMMdd-HHmmss-z}</maven.buildNumber.timestampFormat>
-        <maven.compiler.compilerVersion>11</maven.compiler.compilerVersion>
+        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
         <maven.compiler.debug>true</maven.compiler.debug>
         <maven.compiler.optimize>true</maven.compiler.optimize>
-        <maven.compiler.release>11</maven.compiler.release>
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
         <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.verbose>false</maven.compiler.verbose>
         <maven.plugin.validation>VERBOSE</maven.plugin.validation>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

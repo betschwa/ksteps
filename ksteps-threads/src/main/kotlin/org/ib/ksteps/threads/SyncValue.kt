@@ -89,4 +89,24 @@ class SyncValue<T>(initValue: T,
             return value
         }
     }
+
+    fun waitFor(duration: java.time.Duration,
+                message: String = "Wait for: $name...",
+                predicate: (T) -> Boolean): T {
+        val deadline = Date(Clock.systemUTC()
+                                .millis() + duration.toMillis())
+
+        logger.info { message }
+
+        lock.withLock {
+            while (!predicate.invoke(value)) {
+                val elapsed = condition.awaitUntil(deadline)
+                if (!elapsed) {
+                    throw TimeoutException("Wait for $name expired in $duration and condition not met!")
+                }
+            }
+
+            return value
+        }
+    }
 }
