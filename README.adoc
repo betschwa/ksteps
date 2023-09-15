@@ -2,7 +2,65 @@ image::logo.png[Logo,512,512]
 
 = ksteps
 
-Kolin Steps Framework
+Kolin Steps Framework.
+
+== How to use ksteps in your project
+
+=== Maven
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.ib</groupId>
+    <artifactId>ksteps-threads</artifactId>
+    <version>[KSTEPS VERSION]</version>
+</dependency>
+----
+
+=== Kotlin
+
+[source,kotlin]
+----
+val value = SyncValue(initValue = false,
+                      name = "Sample Value")
+
+assertFalse(actual = value.value,
+            message = "Value not initialised")
+
+kotlin.concurrent.timer(name = "Set value timer",
+                        daemon = true,
+                        period = 10_000L) {
+    value.value = true
+}
+
+assertTrue(actual = value.waitFor(duration = 30.seconds) { it },
+           message = "Value not changed")
+----
+
+=== Java
+
+[source,java]
+----
+final SyncValue<Boolean> value = new SyncValue<>(false,
+                                                 "Sample Value");
+
+Assertions.assertFalse(value.getValue(),
+                       "Value not initialised");
+
+new Timer("Set value timer",
+          true).schedule(new TimerTask() {
+                             @Override
+                             public void run() {
+                                 value.setValue(true);
+                             }
+                         },
+                         10_000L);
+
+Assertions.assertTrue(value.waitFor(Duration.ofSeconds(30L),
+                                    "Wait for TV...",
+                                    (newValue) -> newValue),
+                      "Value not changed");
+----
 
 == License
 
