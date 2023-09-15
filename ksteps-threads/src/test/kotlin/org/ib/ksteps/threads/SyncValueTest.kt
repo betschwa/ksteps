@@ -119,4 +119,33 @@ class SyncValueTest {
                      actual = value2.value,
                      message = "TV 2 not updated")
     }
+
+    @Test
+    fun timeoutMany() {
+        val initial1 = false
+        val initial2 = 0
+
+        val expected1 = true
+        val expected2 = 1
+
+        val value1 = SyncValue(initValue = initial1,
+                               name = "TV 1")
+        val value2 = SyncValue(initValue = initial2,
+                               name = "TV 2")
+
+        assertEquals(expected = initial1,
+                     actual = value1.value,
+                     message = "Value 1 not initialised")
+        assertEquals(expected = initial2,
+                     actual = value2.value,
+                     message = "Value 2 not initialised")
+
+        assertThrows<TimeoutException>(message = "No timeout") {
+            waitFor(duration = 5.seconds,
+                    values = arrayOf(value1,
+                                     value2)) { values ->
+                values[0] == expected1 && values[1] == expected2
+            }
+        }
+    }
 }
