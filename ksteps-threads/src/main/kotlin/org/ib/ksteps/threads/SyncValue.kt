@@ -11,7 +11,7 @@ import kotlin.time.Duration
 private val logger = KotlinLogging.logger {}
 
 class SyncValue<T>(initValue: T,
-                   val name: String = "") : SyncValueImmutable<T> {
+                   override val name: String = "") : SyncValueImmutable<T> {
 
     private val lock = ReentrantLock()
     private val condition = lock.newCondition()
@@ -39,8 +39,8 @@ class SyncValue<T>(initValue: T,
                          new = new)
     }
 
-    fun addListener(fireCurrentState: Boolean = true,
-                    listener: ValueChangedListener<T>): ValueChangedListener<T> {
+    override fun addListener(fireCurrentState: Boolean,
+                             listener: ValueChangedListener<T>): ValueChangedListener<T> {
         synchronized(lock = listeners) {
             listeners += listener
         }
@@ -53,12 +53,12 @@ class SyncValue<T>(initValue: T,
         return listener
     }
 
-    fun removeListener(listener: ValueChangedListener<T>) = synchronized(lock = listeners) {
+    override fun removeListener(listener: ValueChangedListener<T>) = synchronized(lock = listeners) {
         listeners -= listener
     }
 
-    fun waitFor(message: String = "Wait for: $name...",
-                predicate: (T) -> Boolean): T {
+    override fun waitFor(message: String,
+                         predicate: (T) -> Boolean): T {
         logger.info { message }
 
         lock.withLock {
@@ -70,9 +70,9 @@ class SyncValue<T>(initValue: T,
         }
     }
 
-    fun waitFor(duration: Duration,
-                message: String = "Wait for: $name...",
-                predicate: (T) -> Boolean): T {
+    override fun waitFor(duration: Duration,
+                         message: String,
+                         predicate: (T) -> Boolean): T {
         val deadline = Date(Clock.systemUTC()
                                 .millis() + duration.inWholeMilliseconds)
 
@@ -90,9 +90,9 @@ class SyncValue<T>(initValue: T,
         }
     }
 
-    fun waitFor(duration: java.time.Duration,
-                message: String = "Wait for: $name...",
-                predicate: (T) -> Boolean): T {
+    override fun waitFor(duration: java.time.Duration,
+                         message: String,
+                         predicate: (T) -> Boolean): T {
         val deadline = Date(Clock.systemUTC()
                                 .millis() + duration.toMillis())
 

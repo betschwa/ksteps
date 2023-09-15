@@ -1,9 +1,9 @@
-image::logo.png[Logo,512,512]
+image::logo.png[Logo,512,512,align="center"]
 
 = ksteps
 
-image:https://img.shields.io/badge/kotlin-1.9.10-blue.svg?logo=kotlin[http://kotlinlang.org]
-image:https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat[http://www.apache.org/licenses/LICENSE-2.0]
+link:http://kotlinlang.org[image:https://img.shields.io/badge/kotlin-1.9.10-blue.svg?logo=kotlin[Kotlin]]
+link:http://www.apache.org/licenses/LICENSE-2.0[image:https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat[Apache License]]
 
 Kolin Steps Framework.
 
@@ -64,6 +64,10 @@ Assertions.assertTrue(value.waitFor(Duration.ofSeconds(30L),
                                     (newValue) -> newValue),
                       "Value not changed");
 ----
+
+== Reporting issues/Support
+
+Please use https://github.com/Kotlin/kotlindl/issues[GitHub issues] for filing feature requests and bug reports.
 
 == License
 
