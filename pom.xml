@@ -11,9 +11,10 @@
 
     <name>KSteps [Main]</name>
     <description>Kotlin Steps Framework</description>
+    <url>https://github.com/betschwa/ksteps</url>
 
     <prerequisites>
-        <maven>3.6.0</maven>
+        <maven>3.1.0</maven>
     </prerequisites>
 
     <inceptionYear>2023</inceptionYear>
@@ -34,7 +35,7 @@
     <scm>
         <connection>scm:git:https://github.com/betschwa/ksteps.git</connection>
         <developerConnection>scm:git:git@github.com:betschwa/ksteps.git</developerConnection>
-        <url>https://github.com/betschwa/ksteps</url>
+        <url>https://github.com/betschwa/ksteps/tree/master</url>
     </scm>
 
     <licenses>
@@ -258,7 +259,7 @@
                                     <version>[1.8,)</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
-                                    <version>[3.6.0,)</version>
+                                    <version>[3.1.0,)</version>
                                 </requireMavenVersion>
                                 <requirePluginVersions>
                                     <message>Best Practice is to always define plugin versions!</message>
@@ -461,13 +462,13 @@
                 <artifactId>junit-jupiter-params</artifactId>
                 <version>${junit5.version}</version>
             </dependency>
-<!--
-            <dependency>
-                <groupId>org.junit.platform</groupId>
-                <artifactId>junit-platform-engine</artifactId>
-                <version>1.10.0</version>
-            </dependency>
--->
+            <!--
+                        <dependency>
+                            <groupId>org.junit.platform</groupId>
+                            <artifactId>junit-platform-engine</artifactId>
+                            <version>1.10.0</version>
+                        </dependency>
+            -->
             <dependency>
                 <groupId>org.junit.vintage</groupId>
                 <artifactId>junit-vintage-engine</artifactId>
@@ -478,13 +479,13 @@
                 <artifactId>kotlin-test-junit5</artifactId>
                 <version>${kotlin.version}</version>
             </dependency>
-<!--
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.10.0</version>
-            </dependency>
--->
+            <!--
+                        <dependency>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-engine</artifactId>
+                            <version>5.10.0</version>
+                        </dependency>
+            -->
 
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
